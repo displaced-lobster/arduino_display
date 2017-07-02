@@ -26,8 +26,7 @@ def main():
         now = datetime.datetime.now()
         package += now.strftime('%H%M%w%m%d')
         if package[-2] == '0':
-            package[-2] = package[-2]
-            package[-1] = ' '
+            package = package[:-2] + package[-1] + ' '
         if prev_wthr_time is None or (now - prev_wthr_time).seconds >= 1800:
             prev_wthr_time = now
             print('Making weather request...')
@@ -55,7 +54,6 @@ def main():
         package += cpu + ram + '!'
         ser.write(package.encode())
         print(package)
-        print(len(package))
         time.sleep(10)
 
 
