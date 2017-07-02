@@ -74,7 +74,7 @@ void display_date() {
   s_month[0] = package[5];
   s_month[1] = package[6];
   s_month[2] = '\0';
-  month = atoi(s_month);
+  month = atoi(s_month) - 1;
 
   for (int i = 0; i < strlen(days[day]); i++) {
     date[i] = days[day][i];

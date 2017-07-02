@@ -25,9 +25,12 @@ def main():
         package = ''
         now = datetime.datetime.now()
         package += now.strftime('%H%M%w%m%d')
+        if package[-2] == '0':
+            package[-2] = package[-2]
+            package[-1] = ' '
         if prev_wthr_time is None or (now - prev_wthr_time).seconds >= 1800:
             prev_wthr_time = now
-            print('Making weather request.')
+            print('Making weather request...')
             owm = pyowm.OWM(api_key)
             obs = owm.weather_at_place('Edmonton, Canada')
             w = obs.get_weather()
@@ -41,14 +44,14 @@ def main():
                 elif status_char == 'F':
                     status_char = 'E'
             if len(temp) == 1:
-                temp = '0' + temp
+                temp = ' ' + temp
         package += temp + status_char
         cpu = str(psutil.cpu_percent())
         if len(cpu) == 3:
-            cpu = '0' + cpu
+            cpu = ' ' + cpu
         ram = str(psutil.virtual_memory().percent)
         if len(ram) == 3:
-            ram = '0' + ram
+            ram = ' ' + ram
         package += cpu + ram + '!'
         ser.write(package.encode())
         print(package)
