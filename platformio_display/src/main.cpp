@@ -175,10 +175,14 @@ void loop() {}
 void serialEvent() {
   while (Serial.available()) {
     char ch = Serial.read();
-    if (index < MaxSize && ch != '!') {
+    if (index < MaxSize && ch != '!' && ch != '*') {
       package[index] = ch;
       index++;
-    } else {
+    } else if (ch == '*') {
+      myGLCD.clrScr();
+      display_wait_msg();
+      index = 0;
+    }else {
       update_display();
       index = 0;
     }

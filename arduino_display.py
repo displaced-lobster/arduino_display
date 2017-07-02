@@ -95,6 +95,7 @@ def main():
             package.create_and_send_package()
             time.sleep(10)
     except KeyboardInterrupt:
+        package.send_script_ended_package()
         print('--Script Ended---')
 
 
