@@ -201,7 +201,7 @@ void serialEvent() {
   }
   while (Serial.available()) {
     char ch = Serial.read();
-    if (index < MaxSize && ch != '!' && ch != '*') {
+    if (index < MAXSIZE && ch != '!' && ch != '*') {
       package[index] = ch;
       index++;
     } else if (ch == '*') {
