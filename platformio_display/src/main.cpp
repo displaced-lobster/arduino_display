@@ -2,9 +2,11 @@
 #include <UTFT.h>
 
 // Constants
-const char* months[] = {"January",
-"February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-const char* days[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+const char* months[] = {"January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November",
+                        "December"};
+const char* days[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
+                      "Friday", "Saturday"};
 const int PADDING = 10;
 const int MaxSize = 20;
 const int BIG_H = 16; // BigFont height
@@ -13,7 +15,7 @@ const int SEG_H = 50; // Segment font height
 const int SML_H = 12; // SmallFont height
 const int UBU_H = 32; // Ubuntu font height
 const int WTR_W = 48; // WeatherFont width
-const int WARNING = 9; // Threshold for cpu / ram warning indicator. Note: only checks first character
+const int WARNING = 9; // Threshold warning indicator
 
 // Fonts
 extern uint8_t BigFont[]; // dim = 16 x 16
@@ -120,8 +122,10 @@ bool warning_indicator(char a) {
 }
 
 void display_cpu_and_ram() {
-  char cpu[] = {'C', 'P', 'U', ':', ' ', package[12], package[13], package[14], package[15], '%', '\0'};
-  char ram[] = {'R', 'A', 'M', ':', ' ', package[16], package[17], package[18], package[19], '%', '\0'};
+  char cpu[] = {'C', 'P', 'U', ':', ' ', package[12], package[13], package[14],
+                package[15], '%', '\0'};
+  char ram[] = {'R', 'A', 'M', ':', ' ', package[16], package[17], package[18],
+                package[19], '%', '\0'};
 
   myGLCD.setFont(BigFont);
   if (warning_indicator(cpu[5])) {
