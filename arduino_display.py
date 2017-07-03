@@ -2,11 +2,12 @@ import datetime
 import psutil
 import pyowm
 import serial
+import serial.tools.list_ports
 import time
 
 from secrets import api_key  # Open Weather Map API key
 
-ARDUINO = '/dev/ttyACM1'
+ARDUINO = 'Arduino Mega 2560'  # Arduino to be used
 
 
 class Package:
@@ -17,7 +18,8 @@ class Package:
         self.package = ''
         self.time = datetime.datetime.now()
         self.owm = pyowm.OWM(api_key)
-        self.ser = serial.Serial(target, port)
+        self.device = self.find_device()
+        self.ser = serial.Serial(self.device, port)
 
     def get_date_and_time_package(self):
         self.time = datetime.datetime.now()
@@ -91,6 +93,12 @@ class Package:
 
     def send_script_end_signal(self):
         self.ser.write('*'.encode())
+
+    def find_device(self):
+        ports = list(serial.tools.list_ports.comports())
+        for p in ports:
+            if p.description == ARDUINO:
+                return p.device
 
 
 def main():
