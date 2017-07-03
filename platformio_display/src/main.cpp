@@ -13,6 +13,7 @@ const int SEG_H = 50; // Segment font height
 const int SML_H = 12; // SmallFont height
 const int UBU_H = 32; // Ubuntu font height
 const int WTR_W = 48; // WeatherFont width
+const int WARNING = 9; // Threshold for cpu / ram warning indicator. Note: only checks first character
 
 // Fonts
 extern uint8_t BigFont[]; // dim = 16 x 16
@@ -109,13 +110,31 @@ void display_weather() {
   }
 }
 
+bool warning_indicator(char a) {
+  if (a == ' ') {
+    return false;
+  }
+
+  int x = (int)a - '0';
+  return (x >= WARNING);
+}
+
 void display_cpu_and_ram() {
   char cpu[] = {'C', 'P', 'U', ':', ' ', package[12], package[13], package[14], package[15], '%', '\0'};
   char ram[] = {'R', 'A', 'M', ':', ' ', package[16], package[17], package[18], package[19], '%', '\0'};
 
   myGLCD.setFont(BigFont);
+  if (warning_indicator(cpu[5])) {
+    myGLCD.setBackColor(VGA_RED);
+  }
   myGLCD.print(cpu, PADDING, 4 * PADDING + SEG_H + SML_H + UBU_H);
+  myGLCD.setBackColor(VGA_BLACK);
+
+  if (warning_indicator(ram[5])) {
+    myGLCD.setBackColor(VGA_RED);
+  }
   myGLCD.print(ram, PADDING, 5 * PADDING + SEG_H + SML_H + UBU_H + BIG_H);
+  myGLCD.setBackColor(VGA_BLACK);
 }
 
 void display_screen_size() {
