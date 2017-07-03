@@ -8,7 +8,7 @@ const char* months[] = {"January", "February", "March", "April", "May", "June",
 const char* days[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
                       "Friday", "Saturday"};
 const int PADDING = 10;
-const int MaxSize = 20;
+const int MAXSIZE = 20;
 const int BIG_H = 16; // BigFont height
 const int BIG_W = 16; // BigFont width
 const int SEG_H = 50; // Segment font height
@@ -26,7 +26,7 @@ extern uint8_t WeatherFont[]; // dim = 48 x 37
 
 // Variables
 bool first_ser = true;
-char package[MaxSize];
+char package[MAXSIZE];
 int index = 0;
 int screen_h;
 int screen_w;
