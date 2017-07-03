@@ -79,28 +79,29 @@ class Package:
 
         return cpu + ram
 
-    def create_and_send_package(self):
+    def create_and_send(self):
         package = self.get_date_and_time_package()
         if self.time_to_get_weather():
             self.get_weather()
         package += self.wthr_package
         package += self.get_cpu_and_ram_package()
         package += '!'
-        print(package)
+
         self.ser.write(package.encode())
 
-    def send_script_ended_package(self):
+    def send_script_end_signal(self):
         self.ser.write('*'.encode())
 
 
 def main():
     package = Package(ARDUINO)
+    print('Starting communication...')
     try:
         while True:
-            package.create_and_send_package()
+            package.create_and_send()
             time.sleep(10)
     except KeyboardInterrupt:
-        package.send_script_ended_package()
+        package.send_script_end_signal()
         print('--Script Ended---')
 
 
