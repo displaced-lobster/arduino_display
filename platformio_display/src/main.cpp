@@ -33,6 +33,7 @@ UTFT myGLCD(SSD1289, 38, 39, 40, 41);
 
 void display_wait_msg() {
   char waiting[] = "Waiting...";
+
   myGLCD.setFont(BigFont);
   myGLCD.print(waiting, PADDING, PADDING);
 }
@@ -48,13 +49,7 @@ void display_info(char *msg) {
 }
 
 void display_time() {
-  char now[6];
-  now[0] = package[0];
-  now[1] = package[1];
-  now[2] = ':';
-  now[3] = package[2];
-  now[4] = package[3];
-  now[5] = '\0';
+  char now[] = {package[0], package[1], ':', package[2], package[3], '\0'};
 
   myGLCD.setFont(SevenSegmentFull);
   myGLCD.print(now, PADDING, PADDING);
@@ -62,19 +57,13 @@ void display_time() {
 
 void display_date() {
   char date[24];
-  char s_day[2];
-  char s_month[3];
+  char s_day[] = {package[4], '\0'};
+  char s_month[] = {package[5], package[6], '\0'};
   int day;
   int month;
   int date_index = 0;
 
-  s_day[0] = package[4];
-  s_day[1] = '\0';
   day = atoi(s_day);
-
-  s_month[0] = package[5];
-  s_month[1] = package[6];
-  s_month[2] = '\0';
   month = atoi(s_month) - 1;
 
   for (int i = 0; i < strlen(days[day]); i++) {
@@ -105,54 +94,28 @@ void display_date() {
 }
 
 void display_temp() {
-  char temp[5];
-  temp[0] = package[9];
-  temp[1] = package[10];
-  temp[2] = '`';
-  temp[3] = 'C';
-  temp[4] = '\0';
+  char temp[] = {package[9], package[10], '`', 'C', '\0'};
 
   myGLCD.setFont(Ubuntu);
   myGLCD.print(temp, PADDING, 3 * PADDING + SEG_H + SML_H);
 }
 
 void display_weather() {
-  char weather[2];
+  char weather[] = {package[11], '\0'};
 
-  if (packahe[11] != '_') {
-    weather[0] = package[11];
-    weather[1] = '\0';
-
+  if (weather[0] != '_') {
     myGLCD.setFont(WeatherFont);
-    myGLCD.print(weather, screen_w - PADDING - WTR_W, PADDING);
+    myGLCD.print(weather, screen_w - 2 * PADDING - WTR_W, 2 * PADDING);
   }
 }
 
 void display_cpu_and_ram() {
-  char cpu_label[] = "CPU: ";
-  char ram_label[] = "RAM: ";
-  char cpu[6];
-  char ram[6];
-
-  cpu[0] = package[12];
-  cpu[1] = package[13];
-  cpu[2] = package[14];
-  cpu[3] = package[15];
-  cpu[4] = '%';
-  cpu[5] = '\0';
-
-  ram[0] = package[16];
-  ram[1] = package[17];
-  ram[2] = package[18];
-  ram[3] = package[19];
-  ram[4] = '%';
-  ram[5] = '\0';
+  char cpu[] = {'C', 'P', 'U', ':', ' ', package[12], package[13], package[14], package[15], '%', '\0'};
+  char ram[] = {'R', 'A', 'M', ':', ' ', package[16], package[17], package[18], package[19], '%', '\0'};
 
   myGLCD.setFont(BigFont);
-  myGLCD.print(cpu_label, PADDING, 4 * PADDING + SEG_H + SML_H + UBU_H);
-  myGLCD.print(cpu, PADDING + strlen(cpu_label) * BIG_W, 4 * PADDING + SEG_H + SML_H + UBU_H);
-  myGLCD.print(ram_label, PADDING, 5 * PADDING + SEG_H + SML_H + UBU_H + BIG_H);
-  myGLCD.print(ram, PADDING + strlen(ram_label) * BIG_W, 5 * PADDING + SEG_H + SML_H + UBU_H + BIG_H);
+  myGLCD.print(cpu, PADDING, 4 * PADDING + SEG_H + SML_H + UBU_H);
+  myGLCD.print(ram, PADDING, 5 * PADDING + SEG_H + SML_H + UBU_H + BIG_H);
 }
 
 void display_screen_size() {
