@@ -6,14 +6,14 @@ import time
 
 from secrets import api_key  # Open Weather Map API key
 
-ARDUINO = '/dev/ttyACM0'
+ARDUINO = '/dev/ttyACM1'
 
 
 class Package:
     def __init__(self, target, port=9600):
         self.target = target
         self.prev_wthr_time = None
-        self.wthr_package = None
+        self.wthr_package = '  _'
         self.package = ''
         self.time = datetime.datetime.now()
         self.owm = pyowm.OWM(api_key)
@@ -41,27 +41,32 @@ class Package:
                       'thunderstorm': 'I',
                       'snow': 'H',
                       'mist': 'C'}
+
         self.prev_wthr_time = self.time
 
         print('Making weather request...')
 
-        obs = self.owm.weather_at_place('Edmonton, Canada')
-        w = obs.get_weather()
+        try:
+            obs = self.owm.weather_at_place('Edmonton, Canada')
+            w = obs.get_weather()
 
-        temp = w.get_temperature('celsius')
-        temp = str(int(round(temp['temp'], 0)))
-        if len(temp) == 1:
-            temp = ' ' + temp
+            temp = w.get_temperature('celsius')
+            temp = str(int(round(temp['temp'], 0)))
+            if len(temp) == 1:
+                temp = ' ' + temp
 
-        weather_status = w.get_detailed_status()
-        status_char = status_map[weather_status]
-        if self.time.hour >= 22 or self.time.hour <= 6:
-            if status_char == 'J':
-                status_char = 'D'
-            elif status_char == 'F':
-                status_char = 'E'
+            weather_status = w.get_detailed_status()
+            status_char = status_map[weather_status]
+            if self.time.hour >= 22 or self.time.hour <= 6:
+                if status_char == 'J':
+                    status_char = 'D'
+                elif status_char == 'F':
+                    status_char = 'E'
 
-        self.wthr_package = temp + status_char
+            self.wthr_package = temp + status_char
+
+        except:
+            print('OWM connection error...')
 
     def get_cpu_and_ram_package(self):
         cpu = str(psutil.cpu_percent())

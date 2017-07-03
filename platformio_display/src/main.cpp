@@ -22,6 +22,7 @@ extern uint8_t Ubuntu[]; //dim = 24 x 32
 extern uint8_t WeatherFont[]; // dim = 48 x 37
 
 // Variables
+bool first_ser = true;
 char package[MaxSize];
 int index = 0;
 int screen_h;
@@ -117,11 +118,14 @@ void display_temp() {
 
 void display_weather() {
   char weather[2];
-  weather[0] = package[11];
-  weather[1] = '\0';
 
-  myGLCD.setFont(WeatherFont);
-  myGLCD.print(weather, screen_w - PADDING - WTR_W, PADDING);
+  if (packahe[11] != '_') {
+    weather[0] = package[11];
+    weather[1] = '\0';
+
+    myGLCD.setFont(WeatherFont);
+    myGLCD.print(weather, screen_w - PADDING - WTR_W, PADDING);
+  }
 }
 
 void display_cpu_and_ram() {
@@ -151,6 +155,30 @@ void display_cpu_and_ram() {
   myGLCD.print(ram, PADDING + strlen(ram_label) * BIG_W, 5 * PADDING + SEG_H + SML_H + UBU_H + BIG_H);
 }
 
+void display_screen_size() {
+  char screen_sz[8];
+  char w[4];
+  char h[4];
+  int i = 0;
+  String width = String(screen_w);
+  String height = String(screen_h);
+  width.toCharArray(w, 4);
+  height.toCharArray(h, 4);
+  for (int j = 0; j < strlen(w); j++) {
+    screen_sz[i] = w[j];
+    i++;
+  }
+  screen_sz[i] = 'x';
+  i++;
+  for (int j = 0; j < strlen(h); j++) {
+    screen_sz[i] = h[j];
+    i++;
+  }
+  screen_sz[i] = '\0';
+  myGLCD.setFont(BigFont);
+  myGLCD.print(screen_sz, CENTER, screen_h / 2);
+}
+
 void update_display() {
   display_time();
   display_date();
@@ -159,20 +187,32 @@ void update_display() {
   display_cpu_and_ram();
 }
 
+void initial_display() {
+  display_wait_msg();
+  display_screen_size();
+}
+
 void setup() {
   myGLCD.InitLCD();
   myGLCD.clrScr();
-  Serial.begin(9600);
   myGLCD.setBackColor(VGA_BLACK);
   myGLCD.setColor(VGA_WHITE);
-  display_wait_msg();
+
+  Serial.begin(9600);
+
   screen_h = myGLCD.getDisplayYSize();
   screen_w = myGLCD.getDisplayXSize();
+
+  initial_display();
 }
 
 void loop() {}
 
 void serialEvent() {
+  if (first_ser) {
+    myGLCD.clrScr();
+    first_ser = false;
+  }
   while (Serial.available()) {
     char ch = Serial.read();
     if (index < MaxSize && ch != '!' && ch != '*') {
@@ -180,8 +220,9 @@ void serialEvent() {
       index++;
     } else if (ch == '*') {
       myGLCD.clrScr();
-      display_wait_msg();
+      initial_display();
       index = 0;
+      first_ser = true;
     }else {
       update_display();
       index = 0;
