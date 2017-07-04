@@ -25,7 +25,7 @@ extern uint8_t Ubuntu[]; //dim = 24 x 32
 extern uint8_t WeatherFont[]; // dim = 48 x 37
 
 // Variables
-bool first_ser = true;
+bool first_ser = true; // First serial package
 char package[MAXSIZE];
 int index = 0;
 int screen_h;
@@ -42,16 +42,19 @@ void display_wait_msg() {
 }
 
 void test_display() {
+  // Display the package as it was received for testing purposes
   myGLCD.setFont(BigFont);
   myGLCD.print(package, PADDING, PADDING);
 }
 
 void display_info(char *msg) {
+  //  Display a message on the bottom of the screen
   myGLCD.setFont(BigFont);
   myGLCD.print(msg, PADDING, screen_h - PADDING - BIG_H);
 }
 
 void display_time() {
+  // Unpack and display the current time
   char now[] = {package[0], package[1], ':', package[2], package[3], '\0'};
 
   myGLCD.setFont(SevenSegmentFull);
@@ -59,6 +62,7 @@ void display_time() {
 }
 
 void display_date() {
+  // Unpack, find appropriate day and month, and display the current date
   char date[24];
   char s_day[] = {package[4], '\0'};
   char s_month[] = {package[5], package[6], '\0'};
@@ -97,6 +101,7 @@ void display_date() {
 }
 
 void display_temp() {
+  // Unpack and display the current temperature
   char temp[] = {package[9], package[10], '`', 'C', '\0'};
 
   myGLCD.setFont(Ubuntu);
@@ -104,6 +109,7 @@ void display_temp() {
 }
 
 void display_weather() {
+  // Unpack and display the current weather (icon font)
   char weather[] = {package[11], '\0'};
 
   if (weather[0] != '_') {
@@ -113,6 +119,7 @@ void display_weather() {
 }
 
 bool warning_indicator(char a) {
+  // Determine if the indicator condition is true
   if (a == ' ') {
     return false;
   }
@@ -122,6 +129,9 @@ bool warning_indicator(char a) {
 }
 
 void display_cpu_and_ram() {
+  /* Unpack and display ram; change background color if indicator warning
+  condition is true
+  */
   char cpu[] = {'C', 'P', 'U', ':', ' ', package[12], package[13], package[14],
                 package[15], '%', '\0'};
   char ram[] = {'R', 'A', 'M', ':', ' ', package[16], package[17], package[18],
@@ -142,6 +152,7 @@ void display_cpu_and_ram() {
 }
 
 void display_screen_size() {
+  // Display the screen size (w x h) on the center of the screen
   char screen_sz[8];
   char w[4];
   char h[4];
