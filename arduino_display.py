@@ -35,6 +35,8 @@ class Connection:
         self.wthr_package = '  _'
         self.package = ''
         self.time = datetime.datetime.now()
+        self.start_time = self.time
+        self.prev_report = self.time
         self.owm = pyowm.OWM(api_key)
         self.device = self.find_device()
         self.ser = serial.Serial(self.device, port)
@@ -142,6 +144,11 @@ class Connection:
     def time_for_new_package(self, interval=10):
         return (datetime.datetime.now() - self.time).seconds >= interval
 
+    def report_up_time(self, interval=7200):
+        if (self.time - self.prev_report).seconds >= interval:
+            self.prev_report = self.time
+            print('Running for:', (self.time - self.start_time).seconds)
+
 
 def main():
     connection = Connection(ARDUINO)
@@ -153,10 +160,11 @@ def main():
             if connection.time_for_new_package():
                 connection.create_and_send_package()
             connection.check_for_input()
+            connection.report_up_time()
             time.sleep(1)
     except KeyboardInterrupt:
         connection.send_script_end_signal()
-        print('--Script Ended---')
+        print('\n--Script Ended---')
 
 
 if __name__ == '__main__':

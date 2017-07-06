@@ -228,7 +228,8 @@ void loop() {
     myTouch.read();
     touch_x = myTouch.getX();
     touch_y = myTouch.getY();
-    Serial.println("Touch");
+    Serial.println(touch_x);
+    Serial.println(touch_y);
     if ((touch_x >= pwr_ux) && (touch_y >= pwr_uy)) {
       Serial.println("BTN");
     }
