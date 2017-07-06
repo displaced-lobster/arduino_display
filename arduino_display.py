@@ -10,7 +10,7 @@ from secrets import api_key  # Open Weather Map API key
 ARDUINO = 'Arduino Mega 2560'  # Arduino to be used
 
 
-class Package:
+class Connection:
     """Creates a serial connection to the arduino and prepares a "package" to
     be delivered. Houses all functions used to create the package.
 
@@ -111,7 +111,7 @@ class Package:
 
         return cpu + ram
 
-    def create_and_send(self):
+    def create_and_send_package(self):
         """Create the package be calling the appropriate class functions,
         terminate ('!') and send via serial connection to arduino.
         """
@@ -135,16 +135,27 @@ class Package:
             if p.description == ARDUINO:
                 return p.device
 
+    def check_for_input(self):
+        while self.ser.in_waiting:
+            print(self.ser.readline())
+
+    def time_for_new_package(self, interval=10):
+        return (datetime.datetime.now() - self.time).seconds >= interval
+
 
 def main():
-    package = Package(ARDUINO)
+    connection = Connection(ARDUINO)
     print('Starting communication...')
+    connection.send_script_end_signal()
+
     try:
         while True:
-            package.create_and_send()
-            time.sleep(10)
+            if connection.time_for_new_package():
+                connection.create_and_send_package()
+            connection.check_for_input()
+            time.sleep(1)
     except KeyboardInterrupt:
-        package.send_script_end_signal()
+        connection.send_script_end_signal()
         print('--Script Ended---')
 
 

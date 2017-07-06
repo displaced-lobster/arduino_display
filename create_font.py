@@ -1,12 +1,12 @@
 from PIL import Image
 
-img_src = 'weather_font.png'
-outfile = 'WeatherFont.c'
-font_desc = 'Weather icons'
-chars = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K']
+img_src = 'power_button.jpg'
+outfile = 'PowerButton.c'
+font_desc = 'Poqwer button'
+chars = ['A']
 font_width = 48
-width_in_img = 50
-font_height = 37
+width_in_img = 48
+font_height = 48
 
 
 output = {}
@@ -60,7 +60,7 @@ with open(outfile, 'w') as f:
     f.write('#elif defined(__arm__)\r\n\t#define PROGMEM\r\n\t')
     f.write('#define fontdatatype const unsigned char\r\n#endif\r\n\r\n')
     f.write('fontdatatype ' + outfile[:-2] + '[' + mem_usage + ']')
-    f.write('PROGMEM={\r\n')
+    f.write(' PROGMEM={\r\n')
     hex_w = hex(font_width).upper().replace('X', 'x')
     hex_h = hex(font_height).upper().replace('X', 'x')
     hex_strt = hex(ord(chars[0])).upper().replace('X', 'x')

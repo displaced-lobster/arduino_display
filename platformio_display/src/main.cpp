@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include <UTFT.h>
+#include <URTouch.h>
 
 // Constants
 const char* months[] = {"January", "February", "March", "April", "May", "June",
@@ -11,6 +12,7 @@ const int PADDING = 10;
 const int MAXSIZE = 20;
 const int BIG_H = 16; // BigFont height
 const int BIG_W = 16; // BigFont width
+const int PWR_D = 48; // PowerButton width and height
 const int SEG_H = 50; // Segment font height
 const int SML_H = 12; // SmallFont height
 const int UBU_H = 32; // Ubuntu font height
@@ -19,6 +21,7 @@ const int WARNING = 9; // Threshold warning indicator
 
 // Fonts
 extern uint8_t BigFont[]; // dim = 16 x 16
+extern uint8_t PowerButton[]; // dim = 48 x 48
 extern uint8_t SevenSegmentFull[]; // dim = 32 x 50
 extern uint8_t SmallFont[]; // dim = 8 x 12
 extern uint8_t Ubuntu[]; //dim = 24 x 32
@@ -30,9 +33,14 @@ char package[MAXSIZE];
 int index = 0;
 int screen_h;
 int screen_w;
+int touch_x;
+int touch_y;
+int pwr_ux; // pwr button upper x coord
+int pwr_uy; // pwr button upper y coord
 
 // Objects
 UTFT myGLCD(SSD1289, 38, 39, 40, 41);
+URTouch myTouch(6, 5, 4, 3, 2);
 
 void display_wait_msg() {
   char waiting[] = "Waiting...";
@@ -176,12 +184,18 @@ void display_screen_size() {
   myGLCD.print(screen_sz, CENTER, screen_h / 2);
 }
 
+void display_power_button() {
+  myGLCD.setFont(PowerButton);
+  myGLCD.print("A", pwr_ux, pwr_uy);
+}
+
 void update_display() {
   display_time();
   display_date();
   display_temp();
   display_weather();
   display_cpu_and_ram();
+  display_power_button();
 }
 
 void initial_display() {
@@ -192,6 +206,10 @@ void initial_display() {
 void setup() {
   myGLCD.InitLCD();
   myGLCD.clrScr();
+
+  myTouch.InitTouch();
+  myTouch.setPrecision(PREC_MEDIUM);
+
   myGLCD.setBackColor(VGA_BLACK);
   myGLCD.setColor(VGA_WHITE);
 
@@ -199,11 +217,24 @@ void setup() {
 
   screen_h = myGLCD.getDisplayYSize();
   screen_w = myGLCD.getDisplayXSize();
+  pwr_ux = screen_w - 2 * PADDING - PWR_D;
+  pwr_uy = screen_h - 2 * PADDING - PWR_D;
 
   initial_display();
 }
 
-void loop() {}
+void loop() {
+  if (myTouch.dataAvailable()) {
+    myTouch.read();
+    touch_x = myTouch.getX();
+    touch_y = myTouch.getY();
+    Serial.println("Touch");
+    if ((touch_x >= pwr_ux) && (touch_y >= pwr_uy)) {
+      Serial.println("BTN");
+    }
+    delay(1000);
+  }
+}
 
 void serialEvent() {
   if (first_ser) {
