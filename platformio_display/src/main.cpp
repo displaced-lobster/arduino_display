@@ -231,7 +231,9 @@ void loop() {
     Serial.println(touch_x);
     Serial.println(touch_y);
     if ((touch_x >= pwr_ux) && (touch_y >= pwr_uy)) {
-      Serial.println("BTN");
+      if ((touch_x <= pwr_ux + PWR_D) && (touch_y <= pwr_uy + PWR_D)) {
+        Serial.println("BTN");
+      }
     }
     delay(1000);
   }

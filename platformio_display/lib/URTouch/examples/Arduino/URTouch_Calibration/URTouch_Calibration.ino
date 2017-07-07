@@ -1,4 +1,4 @@
-// URTouch_Calibration 
+// URTouch_Calibration
 // Copyright (C)2015 Rinky-Dink Electronics, Henning Karlsen. All right reserved
 // web: http://www.RinkyDinkElectronics.com/
 //
@@ -8,7 +8,7 @@
 // screen module that is compatible with UTFT.
 //
 // It is assumed that the display module is connected to an
-// appropriate shield or that you know how to change the pin 
+// appropriate shield or that you know how to change the pin
 // numbers in the setup.
 //
 // Instructions will be given on the display.
@@ -17,9 +17,9 @@
 #include <UTFT.h>
 #include <URTouch.h>
 
-// Define the orientation of the touch screen. Further 
+// Define the orientation of the touch screen. Further
 // information can be found in the instructions.
-#define TOUCH_ORIENTATION  PORTRAIT
+#define TOUCH_ORIENTATION  LANDSCAPE
 
 // Initialize display
 // ------------------
@@ -32,7 +32,7 @@
 // ElecHouse TFT LCD/SD Shield for Arduino Due : <display model>,22,23,31,33
 //
 // Remember to change the model parameter to suit your display module!
-UTFT    myGLCD(ITDB32S,38,39,40,41);
+UTFT    myGLCD(SSD1289,38,39,40,41);
 
 // Initialize touchscreen
 // ----------------------
@@ -88,7 +88,7 @@ void readCoordinates()
   uint32_t tx=0;
   uint32_t ty=0;
   boolean OK = false;
-  
+
   while (OK == false)
   {
     myGLCD.setColor(255, 255, 255);
@@ -175,7 +175,7 @@ void startup()
   myGLCD.setBackColor(0, 0, 0);
 
   if (dispx==220)
-  {  
+  {
     myGLCD.print("Use a stylus or something", LEFT, 30);
     myGLCD.print("similar to touch as close", LEFT, 42);
     myGLCD.print("to the center of the", LEFT, 54);
@@ -220,9 +220,9 @@ void done()
   myGLCD.drawLine(0, 14, dispx-1, 14);
   myGLCD.print("URTouch Calibration", CENTER, 1);
   myGLCD.setBackColor(0, 0, 0);
-  
+
   if (dispx==220)
-  {  
+  {
     myGLCD.print("To use the new calibration", LEFT, 30);
     myGLCD.print("settings you must edit the", LEFT, 42);
     myGLCD.setColor(160, 160, 255);
@@ -243,7 +243,7 @@ void done()
     myGLCD.print(buf, 75, 134);
   }
   else
-  {  
+  {
     myGLCD.print("CALIBRATION COMPLETE", CENTER, 30);
     myGLCD.print("To use the new calibration", LEFT, 50);
     myGLCD.print("settings you must edit the", LEFT, 62);
@@ -266,7 +266,7 @@ void done()
     toHex(cals);
     myGLCD.print(buf, 75, 174);
   }
-  
+
 }
 
 void fail()
@@ -279,20 +279,20 @@ void fail()
   myGLCD.drawLine(0, 14, dispx-1, 14);
   myGLCD.print("URTouch Calibration FAILED", CENTER, 1);
   myGLCD.setBackColor(0, 0, 0);
-  
+
   myGLCD.print("Unable to read the position", LEFT, 30);
   myGLCD.print("of the press. This is a", LEFT, 42);
   myGLCD.print("hardware issue and can", 88, 54);
   myGLCD.print("not be corrected in", LEFT, 66);
   myGLCD.print("software.", LEFT, 78);
-  
+
   while(true) {};
 }
 
 void loop()
 {
   startup();
-  
+
   myGLCD.setColor(80, 80, 80);
   drawCrossHair(dispx-11, 10);
   drawCrossHair(dispx/2, 10);
@@ -315,7 +315,7 @@ void loop()
   calibrate(dispx-11, 10, 5);
   calibrate(dispx-11, dispy/2, 6);
   calibrate(dispx-11, dispy-11, 7);
-  
+
   if (TOUCH_ORIENTATION == LANDSCAPE)
     cals=(long(dispx-1)<<12)+(dispy-1);
   else
@@ -346,7 +346,7 @@ void loop()
     clx = clx + (px*10);
     crx = crx - (px*10);
   }
-  
+
   if (TOUCH_ORIENTATION == PORTRAIT)
     py = abs(((float(ry[5]+ry[6]+ry[7])/3)-(float(ry[0]+ry[1]+ry[2])/3))/(dispx-20));  // PORTRAIT
   else
@@ -372,7 +372,7 @@ void loop()
     cty = cty + (py*10);
     cby = cby - (py*10);
   }
-  
+
   calx = (long(clx)<<14) + long(crx);
   caly = (long(cty)<<14) + long(cby);
   if (TOUCH_ORIENTATION == LANDSCAPE)
