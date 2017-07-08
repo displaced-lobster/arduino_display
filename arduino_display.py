@@ -149,7 +149,8 @@ class Connection:
     def report_up_time(self, interval=7200):
         if (self.time - self.prev_report).seconds >= interval:
             self.prev_report = self.time
-            print('Running for:', (self.time - self.start_time).seconds)
+            report = (self.time - self.start_time).seconds // 3600
+            print('Running for:', report, 'hours')
 
 
 def main():
