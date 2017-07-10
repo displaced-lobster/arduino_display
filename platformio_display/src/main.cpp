@@ -42,11 +42,11 @@ int pwr_uy; // pwr button upper y coord
 UTFT myGLCD(SSD1289, 38, 39, 40, 41);
 URTouch myTouch(6, 5, 4, 3, 2);
 
-void display_wait_msg() {
-  char waiting[] = "Waiting...";
+void display_msg(int i) {
+  char *messages[] = {"Waiting...", "Connecting..."};
 
   myGLCD.setFont(BigFont);
-  myGLCD.print(waiting, PADDING, PADDING);
+  myGLCD.print(messages[i], PADDING, PADDING);
 }
 
 void test_display() {
@@ -199,7 +199,7 @@ void update_display() {
 }
 
 void initial_display() {
-  display_wait_msg();
+  display_msg(0);
   display_screen_size();
 }
 
@@ -246,15 +246,17 @@ void serialEvent() {
   }
   while (Serial.available()) {
     char ch = Serial.read();
-    if (index < MAXSIZE && ch != '!' && ch != '*') {
-      package[index] = ch;
-      index++;
-    } else if (ch == '*') {
+    if (ch == '*') {
       myGLCD.clrScr();
       initial_display();
       index = 0;
       first_ser = true;
-    }else {
+    } else if (ch == '#') {
+      display_msg(1);
+    } else if (index < MAXSIZE && ch != '!') {
+      package[index] = ch;
+      index++;
+    } else {
       update_display();
       index = 0;
     }

@@ -67,7 +67,7 @@ class Connection:
                       'few clouds': 'F',
                       'scattered clouds': 'F',
                       'broken clouds': 'F',
-                      'shower rain': 'B',
+                      'light rain': 'B',
                       'rain': 'G',
                       'thunderstorm': 'I',
                       'snow': 'H',
@@ -88,7 +88,12 @@ class Connection:
                 temp = ' ' + temp
 
             weather_status = w.get_detailed_status()
-            status_char = status_map[weather_status]
+            if weather_status in status_map:
+                status_char = status_map[weather_status]
+            else:
+                print('WARNING:', weather_status, 'not is status_map.')
+                status_char = '_'
+
             if self.time.hour >= 22 or self.time.hour <= 6:
                 if status_char == 'J':
                     status_char = 'D'
@@ -152,6 +157,9 @@ class Connection:
             report = (self.time - self.start_time).seconds // 3600
             print('Running for:', report, 'hours')
 
+    def send_start_signal(self):
+        self.ser.write('#'.encode())
+
 
 def main():
     connection = Connection(ARDUINO)
@@ -168,6 +176,10 @@ def main():
     except KeyboardInterrupt:
         connection.send_script_end_signal()
         print('\n--Script Ended---')
+    except:
+        connection.send_script_end_signal()
+        print('FATAL ERROR!')
+        raise
 
 
 if __name__ == '__main__':
