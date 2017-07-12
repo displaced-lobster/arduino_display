@@ -63,15 +63,15 @@ class Connection:
         the appropriate character to be used be the weather font.
         """
 
-        status_map = {'clear sky': 'J',
-                      'few clouds': 'F',
-                      'scattered clouds': 'F',
-                      'broken clouds': 'F',
-                      'light rain': 'B',
-                      'rain': 'G',
-                      'thunderstorm': 'I',
-                      'snow': 'H',
-                      'mist': 'C'}
+        icon_map = {'01d': 'J', '01n': 'D',
+                    '02d': 'F', '02n': 'E',
+                    '03d': 'A', '03n': 'A',
+                    '04d': 'A', '04n': 'A',
+                    '09d': 'G', '09n': 'G',
+                    '10d': 'B', '10n': 'B',
+                    '11d': 'I', '11n': 'I',
+                    '13d': 'H', '13n': 'H',
+                    '50d': 'C', '50n': 'C'}
 
         self.prev_wthr_time = self.time
 
@@ -87,20 +87,14 @@ class Connection:
             if len(temp) == 1:
                 temp = ' ' + temp
 
-            weather_status = w.get_detailed_status()
-            if weather_status in status_map:
-                status_char = status_map[weather_status]
+            icon = w.get_weather_icon_name()
+            if icon in icon_map:
+                icon_char = icon_map[icon]
             else:
-                print('WARNING:', weather_status, 'not is status_map.')
-                status_char = '_'
+                print('WARNING:', icon, 'not in icon_map!')
+                icon_char = '_'
 
-            if self.time.hour >= 22 or self.time.hour <= 6:
-                if status_char == 'J':
-                    status_char = 'D'
-                elif status_char == 'F':
-                    status_char = 'E'
-
-            self.wthr_package = temp + status_char
+            self.wthr_package = temp + icon_char
 
         # TODO: Modify for specific exception
         except:
@@ -145,8 +139,8 @@ class Connection:
                 return p.device
 
     def check_for_input(self):
-        while self.ser.in_waiting:
-            print(self.ser.readline())
+        if self.ser.in_waiting:
+            self.toggle_lights()
 
     def time_for_new_package(self, interval=10):
         return (datetime.datetime.now() - self.time).seconds >= interval
