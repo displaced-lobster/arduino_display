@@ -63,6 +63,7 @@ class Connection:
         the appropriate character to be used be the weather font.
         """
 
+        # https://openweathermap.org/weather-conditions
         icon_map = {'01d': 'J', '01n': 'D',
                     '02d': 'F', '02n': 'E',
                     '03d': 'A', '03n': 'A',

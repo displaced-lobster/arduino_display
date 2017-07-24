@@ -71,7 +71,8 @@ void display_time() {
 
 void display_date() {
   // Unpack, find appropriate day and month, and display the current date
-  char date[24];
+  int buf_size = 24;
+  char date[buf_size];
   char s_day[] = {package[4], '\0'};
   char s_month[] = {package[5], package[6], '\0'};
   int day;
@@ -102,6 +103,12 @@ void display_date() {
   date_index++;
   date[date_index] = package[8];
   date_index++;
+
+  while (date_index < buf_size - 1) {
+    date[date_index] = ' '; // Fill with spaces to overwrite older characters
+    date_index++;
+  }
+
   date[date_index] = '\0';
 
   myGLCD.setFont(SmallFont);
