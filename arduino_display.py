@@ -159,14 +159,18 @@ class Connection:
 def main():
     connection = Connection(ARDUINO)
     print('Starting communication...')
-    connection.send_script_end_signal()
+    connection.send_start_signal()
 
     try:
         while True:
-            if connection.time_for_new_package():
-                connection.create_and_send_package()
-            connection.check_for_input()
-            connection.report_up_time()
+            try:
+                if connection.time_for_new_package():
+                    connection.create_and_send_package()
+                # connection.check_for_input()
+                connection.report_up_time()
+            except serial.serialutil.SerialException:
+                print('Connection to arduino lost, retrying connection...')
+                connection = Connection(ARDUINO)
             time.sleep(1)
     except KeyboardInterrupt:
         connection.send_script_end_signal()
