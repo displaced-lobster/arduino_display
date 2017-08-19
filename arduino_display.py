@@ -149,8 +149,13 @@ class Connection:
     def report_up_time(self, interval=7200):
         if (self.time - self.prev_report).seconds >= interval:
             self.prev_report = self.time
-            report = (self.time - self.start_time).seconds // 3600
-            print('Running for:', report, 'hours')
+            time_delta = self.time - self.start_time
+            days = time_delta.days
+            hours = time_delta.seconds // 3600
+            print('Running for: ', end = '')
+            if days > 0:
+                print(days, 'days,', end =' ')
+            print(hours, 'hours')
 
     def send_start_signal(self):
         self.ser.write('#'.encode())
