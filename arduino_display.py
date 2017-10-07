@@ -6,7 +6,6 @@ import pyowm
 import serial
 import serial.tools.list_ports
 import time
-
 from secrets import api_key  # Open Weather Map API key
 
 ARDUINO = 'Arduino Mega 2560'  # Arduino to be used
@@ -152,9 +151,9 @@ class Connection:
             time_delta = self.time - self.start_time
             days = time_delta.days
             hours = time_delta.seconds // 3600
-            print('Running for: ', end = '')
+            print('Running for: ', end='')
             if days > 0:
-                print(days, 'days,', end =' ')
+                print(days, 'days,', end=' ')
             print(hours, 'hours')
 
     def send_start_signal(self):
