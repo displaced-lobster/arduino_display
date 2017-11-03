@@ -117,7 +117,7 @@ void display_date() {
 
 void display_temp() {
   // Unpack and display the current temperature
-  char temp[] = {package[9], package[10], '`', 'C', '\0'};
+  char temp[] = {package[9], package[10], package[11], '`', 'C', '\0'};
 
   myGLCD.setFont(Ubuntu);
   myGLCD.print(temp, PADDING, 3 * PADDING + SEG_H + SML_H);
@@ -125,7 +125,7 @@ void display_temp() {
 
 void display_weather() {
   // Unpack and display the current weather (icon font)
-  char weather[] = {package[11], '\0'};
+  char weather[] = {package[12], '\0'};
 
   if (weather[0] != '_') {
     myGLCD.setFont(WeatherFont);
@@ -147,10 +147,10 @@ void display_cpu_and_ram() {
   /* Unpack and display ram; change background color if indicator warning
   condition is true
   */
-  char cpu[] = {'C', 'P', 'U', ':', ' ', package[12], package[13], package[14],
-                package[15], '%', '\0'};
-  char ram[] = {'R', 'A', 'M', ':', ' ', package[16], package[17], package[18],
-                package[19], '%', '\0'};
+  char cpu[] = {'C', 'P', 'U', ':', ' ', package[13], package[14], package[15],
+                package[16], '%', '\0'};
+  char ram[] = {'R', 'A', 'M', ':', ' ', package[17], package[18], package[19],
+                package[20], '%', '\0'};
 
   myGLCD.setFont(BigFont);
   if (warning_indicator(cpu[5])) {

@@ -85,6 +85,8 @@ class Connection:
             temp = w.get_temperature('celsius')
             temp = str(int(round(temp['temp'], 0)))
             if len(temp) == 1:
+                temp = '  ' + temp
+            elif len(temp) == 2:
                 temp = ' ' + temp
 
             icon = w.get_weather_icon_name()
