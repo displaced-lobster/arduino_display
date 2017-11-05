@@ -9,7 +9,7 @@ const char* months[] = {"January", "February", "March", "April", "May", "June",
 const char* days[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
                       "Friday", "Saturday"};
 const int PADDING = 10;
-const int MAXSIZE = 20;
+const int MAXSIZE = 21;
 const int BIG_H = 16; // BigFont height
 const int BIG_W = 16; // BigFont width
 const int PWR_D = 48; // PowerButton width and height
@@ -147,10 +147,8 @@ void display_cpu_and_ram() {
   /* Unpack and display ram; change background color if indicator warning
   condition is true
   */
-  char cpu[] = {'C', 'P', 'U', ':', ' ', package[13], package[14], package[15],
-                package[16], '%', '\0'};
-  char ram[] = {'R', 'A', 'M', ':', ' ', package[17], package[18], package[19],
-                package[20], '%', '\0'};
+  char cpu[] = {'C', 'P', 'U', ':', ' ', package[13], package[14], package[15], package[16], '%', '\0'};
+  char ram[] = {'R', 'A', 'M', ':', ' ', package[17], package[18], package[19], package[20], '%', '\0'};
 
   myGLCD.setFont(BigFont);
   if (warning_indicator(cpu[5])) {
@@ -202,7 +200,7 @@ void update_display() {
   display_temp();
   display_weather();
   display_cpu_and_ram();
-  display_power_button();
+  // display_power_button();
 }
 
 void initial_display() {

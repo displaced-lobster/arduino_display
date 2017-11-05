@@ -117,7 +117,7 @@ class Connection:
         return cpu + ram
 
     def create_and_send_package(self):
-        """Create the package be calling the appropriate class functions,
+        """Create the package by calling the appropriate class functions,
         terminate ('!') and send via serial connection to arduino.
         """
         package = self.get_date_and_time_package()
