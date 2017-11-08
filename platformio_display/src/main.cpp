@@ -155,13 +155,13 @@ void display_cpu_and_ram() {
     myGLCD.setBackColor(VGA_RED);
   }
   myGLCD.print(cpu, PADDING, 4 * PADDING + SEG_H + SML_H + UBU_H);
-  myGLCD.setBackColor(VGA_BLACK);
+  myGLCD.setBackColor(7, 54, 66);
 
   if (warning_indicator(ram[5])) {
     myGLCD.setBackColor(VGA_RED);
   }
   myGLCD.print(ram, PADDING, 5 * PADDING + SEG_H + SML_H + UBU_H + BIG_H);
-  myGLCD.setBackColor(VGA_BLACK);
+  myGLCD.setBackColor(7, 54, 66);
 }
 
 void display_screen_size() {
@@ -215,8 +215,10 @@ void setup() {
   myTouch.InitTouch();
   myTouch.setPrecision(PREC_MEDIUM);
 
-  myGLCD.setBackColor(VGA_BLACK);
-  myGLCD.setColor(VGA_WHITE);
+  myGLCD.fillScr(7, 54, 66);
+
+  myGLCD.setBackColor(7, 54, 66);
+  myGLCD.setColor(238, 232, 213);
 
   Serial.begin(9600);
 
@@ -247,6 +249,7 @@ void loop() {
 void serialEvent() {
   if (first_ser) {
     myGLCD.clrScr();
+    myGLCD.fillScr(7, 54, 66);
     first_ser = false;
   }
   while (Serial.available()) {
