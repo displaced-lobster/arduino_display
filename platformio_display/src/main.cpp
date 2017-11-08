@@ -42,6 +42,30 @@ int pwr_uy; // pwr button upper y coord
 UTFT myGLCD(SSD1289, 38, 39, 40, 41);
 URTouch myTouch(6, 5, 4, 3, 2);
 
+// Set Colors
+// Wrapper functions for controlling color schemes.
+
+void fill_background() {
+  int r = 7;
+  int g = 54;
+  int b = 66;
+  myGLCD.fillScr(r, g, b);
+}
+
+void set_background() {
+  int r = 7;
+  int g = 54;
+  int b = 66;
+  myGLCD.setBackColor(r, g, b);
+}
+
+void set_font_color() {
+  int r = 238;
+  int g = 232;
+  int b = 213;
+  myGLCD.setColor(r, g, b);
+}
+
 void display_msg(int i) {
   char *messages[] = {"Waiting...", "Connecting..."};
 
@@ -155,13 +179,13 @@ void display_cpu_and_ram() {
     myGLCD.setBackColor(VGA_RED);
   }
   myGLCD.print(cpu, PADDING, 4 * PADDING + SEG_H + SML_H + UBU_H);
-  myGLCD.setBackColor(7, 54, 66);
+  set_background();
 
   if (warning_indicator(ram[5])) {
     myGLCD.setBackColor(VGA_RED);
   }
   myGLCD.print(ram, PADDING, 5 * PADDING + SEG_H + SML_H + UBU_H + BIG_H);
-  myGLCD.setBackColor(7, 54, 66);
+  set_background();
 }
 
 void display_screen_size() {
@@ -215,10 +239,9 @@ void setup() {
   myTouch.InitTouch();
   myTouch.setPrecision(PREC_MEDIUM);
 
-  myGLCD.fillScr(7, 54, 66);
-
-  myGLCD.setBackColor(7, 54, 66);
-  myGLCD.setColor(238, 232, 213);
+  fill_background();
+  set_background();
+  set_font_color();
 
   Serial.begin(9600);
 
@@ -249,7 +272,7 @@ void loop() {
 void serialEvent() {
   if (first_ser) {
     myGLCD.clrScr();
-    myGLCD.fillScr(7, 54, 66);
+    fill_background();
     first_ser = false;
   }
   while (Serial.available()) {
