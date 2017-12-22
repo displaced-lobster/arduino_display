@@ -66,9 +66,9 @@ with open(outfile, 'w') as f:
     hex_strt = hex(ord(chars[0])).upper().replace('X', 'x')
     hex_cnt = hex(len(chars)).upper().replace('X', 'x')
     preamble = [hex_w, hex_h, hex_strt, hex_cnt]
-    for i in range(len(preamble)):
-        if len(preamble[i]) == 3:
-            preamble[i] = preamble[i].replace('x', 'x0')
+    for i, elem in enumerate(preamble):
+        if len(elem) == 3:
+            preamble[i] = elem.replace('x', 'x0')
     f.write(','.join(preamble) + ',\r\n')
 
     for char in chars:
