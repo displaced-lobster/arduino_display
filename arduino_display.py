@@ -99,8 +99,10 @@ class Connection:
             self.wthr_package = temp + icon_char
 
         # TODO: Modify for specific exception
-        except:
-            print('OWM connection error...')
+        except pyowm.exceptions.api_call_error.APICallError:
+            print('APICallError...')
+        except pyowm.exceptions.api_response_error.APIResponseError:
+            print('APIResponseError...')
 
     def get_cpu_and_ram_package(self):
         """Use psutil to retrieve cpu and ram usage as a percentage and return
@@ -181,9 +183,8 @@ def main():
     except KeyboardInterrupt:
         connection.send_script_end_signal()
         print('\n--Script Ended---')
-    except:
+    except Exception as e:
         connection.send_script_end_signal()
-        print('FATAL ERROR!')
         raise
 
 
