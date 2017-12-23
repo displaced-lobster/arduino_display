@@ -11,6 +11,14 @@ from secrets import api_key  # Open Weather Map API key
 ARDUINO = 'Arduino Mega 2560'  # Arduino to be used
 
 
+def find_arduino():
+    """Determine the location of the arduino based upon a description."""
+    ports = list(serial.tools.list_ports.comports())
+    for p in ports:
+        if p.description == ARDUINO:
+            return p.device
+
+
 class Connection:
     """Creates a serial connection to the arduino and prepares a "package" to
     be delivered. Houses all functions used to create the package.
@@ -39,7 +47,7 @@ class Connection:
         self.start_time = self.time
         self.prev_report = self.time
         self.owm = pyowm.OWM(api_key)
-        self.device = self.find_device()
+        self.device = find_arduino()
         self.ser = serial.Serial(self.device, port)
 
     def get_date_and_time_package(self):
@@ -135,13 +143,6 @@ class Connection:
         """Send single character ('*') to singal script end."""
         self.ser.write('*'.encode())
 
-    def find_device(self):
-        """Determine the location of the arduino based upon a description."""
-        ports = list(serial.tools.list_ports.comports())
-        for p in ports:
-            if p.description == ARDUINO:
-                return p.device
-
     def check_for_input(self):
         if self.ser.in_waiting:
             self.toggle_lights()
@@ -183,7 +184,7 @@ def main():
     except KeyboardInterrupt:
         connection.send_script_end_signal()
         print('\n--Script Ended---')
-    except Exception as e:
+    except Exception:
         connection.send_script_end_signal()
         raise
 
